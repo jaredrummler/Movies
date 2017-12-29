@@ -50,7 +50,7 @@ public class Prefs {
     }
 
     public MovieSortOrder getMovieSortOrder() {
-        String value = preferences.getString(PREF_MOVIE_SORT_ORDER, MovieSortOrder.POPULAR.path);
+        String value = preferences.getString(PREF_MOVIE_SORT_ORDER, DEFAULT_SORT_ORDER.path);
         for (MovieSortOrder sortOrder : MovieSortOrder.values()) {
             if (sortOrder.path.equals(value)) {
                 return sortOrder;
