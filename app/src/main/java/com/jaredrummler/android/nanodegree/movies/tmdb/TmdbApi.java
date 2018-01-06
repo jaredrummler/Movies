@@ -17,6 +17,7 @@
 package com.jaredrummler.android.nanodegree.movies.tmdb;
 
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.MoviesResponse;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.ReviewResponse;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.TrailerResponse;
 
 import retrofit2.Call;
@@ -26,7 +27,7 @@ import retrofit2.http.Query;
 
 /**
  * The Movie DB API
- *
+ * <p>
  * See: https://developers.themoviedb.org
  */
 public interface TmdbApi {
@@ -50,8 +51,21 @@ public interface TmdbApi {
 
     @GET("3/movie/{movie_id}/videos")
     Call<TrailerResponse> fetchTrailers(
-        @Path("movie_id") int id,
-        @Query("api_key") String apiKey
+            @Path("movie_id") int id,
+            @Query("api_key") String apiKey
+    );
+
+    @GET("3/movie/{movie_id}/reviews")
+    Call<ReviewResponse> fetchReviews(
+            @Path("movie_id") int id,
+            @Query("api_key") String apiKey
+    );
+
+    @GET("3/movie/{movie_id}/reviews")
+    Call<ReviewResponse> fetchReviews(
+            @Path("movie_id") int id,
+            @Query("api_key") String apiKey,
+            @Query("page") int page
     );
 
 }
