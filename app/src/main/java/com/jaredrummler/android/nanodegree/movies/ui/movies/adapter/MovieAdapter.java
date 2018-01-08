@@ -30,6 +30,7 @@ import com.jaredrummler.android.nanodegree.movies.R;
 import com.jaredrummler.android.nanodegree.movies.tmdb.config.PosterPathSize;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
 import com.jaredrummler.android.nanodegree.movies.ui.movies.MoviesView;
+import com.jaredrummler.android.nanodegree.movies.utils.BaseViewHolder.OnItemClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -37,7 +38,7 @@ import java.util.List;
 /**
  * The {@link RecyclerView.Adapter} used for showing a list of movies
  */
-public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     /*package*/ final List<Movie> movies;
     /*package*/ final MoviesView moviesView;
@@ -49,8 +50,8 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieViewHold
         }
     };
 
-    public MovieRecyclerViewAdapter(@NonNull List<Movie> movies,
-                                    @NonNull MoviesView moviesView) {
+    public MovieAdapter(@NonNull List<Movie> movies,
+                        @NonNull MoviesView moviesView) {
         this.movies = movies;
         this.moviesView = moviesView;
     }
@@ -84,19 +85,6 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieViewHold
     @NonNull
     public List<Movie> getMovies() {
         return movies;
-    }
-
-    /**
-     * Callback when a view is clicked from the ViewHolder
-     */
-    interface OnItemClickListener {
-
-        /**
-         * Called when an item is clicked
-         *
-         * @param position The position in the list of movies
-         */
-        void onItemClicked(int position);
     }
 
 }

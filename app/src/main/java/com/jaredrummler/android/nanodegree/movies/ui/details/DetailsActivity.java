@@ -19,8 +19,14 @@ package com.jaredrummler.android.nanodegree.movies.ui.details;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -33,16 +39,21 @@ import com.jaredrummler.android.nanodegree.movies.R;
 import com.jaredrummler.android.nanodegree.movies.tmdb.config.BackropPathSize;
 import com.jaredrummler.android.nanodegree.movies.tmdb.config.PosterPathSize;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.Trailer;
+import com.jaredrummler.android.nanodegree.movies.ui.details.trailers.TrailerLoader;
+import com.jaredrummler.android.nanodegree.movies.ui.details.trailers.TrailersAdapter;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-public class DetailsActivity extends AppCompatActivity {
+import java.util.List;
+
+public class DetailsActivity extends AppCompatActivity implements DetailsView {
 
     private static final String TAG = "DetailsActivity";
 
     public static final String EXTRA_MOVIE = "nanodegree.movies.extras.MOVIE";
 
-    private Movie mMovie;
+    private Movie movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +74,15 @@ public class DetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
         // Get the Movie
-        mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE);
+        movie = getIntent().getParcelableExtra(EXTRA_MOVIE);
 
         // Load the details
         loadBackdrop();
         loadPoster();
+
+        // Load the trailers
+        LoaderManager loaderManager = getSupportLoaderManager();
+        loaderManager.initLoader(TrailerLoader.TRAILER_LOADER_ID, null, trailerCallbacks);
     }
 
     @Override
@@ -81,9 +96,34 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void showTrailers(@Nullable List<Trailer> trailers) {
+        if (trailers == null || trailers.isEmpty()) {
+            findViewById(R.id.cv_trailers).setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        RecyclerView rvTrailers = findViewById(R.id.rv_trailers);
+        rvTrailers.setVisibility(View.VISIBLE);
+        rvTrailers.setHasFixedSize(true);
+        rvTrailers.setNestedScrollingEnabled(false);
+        findViewById(R.id.pb_trailers).setVisibility(View.GONE);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        rvTrailers.setLayoutManager(layoutManager);
+        rvTrailers.setAdapter(new TrailersAdapter(trailers, this));
+    }
+
+    @Override
+    public void openTrailer(@NonNull Trailer trailer) {
+        Intent watchIntent = trailer.getWatchIntent(this);
+        if (watchIntent != null) {
+            startActivity(watchIntent);
+        }
+    }
+
     private void loadBackdrop() {
         ImageView ivMovieBackdrop = (ImageView) findViewById(R.id.iv_movie_backdrop);
-        Uri backdropUri = BackropPathSize.MEDIUM.getUri(mMovie);
+        Uri backdropUri = BackropPathSize.MEDIUM.getUri(movie);
         Picasso.with(this).load(backdropUri).into(ivMovieBackdrop, new Callback() {
             @Override
             public void onSuccess() {
@@ -102,7 +142,7 @@ public class DetailsActivity extends AppCompatActivity {
     private void loadPoster() {
         ImageView ivMoviePoster = (ImageView) findViewById(R.id.iv_movie_poster);
         PosterPathSize posterSize = PosterPathSize.getIdealSize(this);
-        Uri posterUri = posterSize.getUri(mMovie);
+        Uri posterUri = posterSize.getUri(movie);
         //noinspection SuspiciousNameCombination
         Picasso.with(this)
                 .load(posterUri)
@@ -117,16 +157,16 @@ public class DetailsActivity extends AppCompatActivity {
         findViewById(R.id.movie_details_layout).setVisibility(View.VISIBLE);
         // Set the movie title
         TextView tvMovieTitle = (TextView) findViewById(R.id.tv_movie_title);
-        tvMovieTitle.setText(mMovie.getTitle());
+        tvMovieTitle.setText(movie.getTitle());
         // Set the release date
         TextView tvReleaseDate = (TextView) findViewById(R.id.tv_release_date);
-        tvReleaseDate.setText(mMovie.getReleaseDate());
+        tvReleaseDate.setText(movie.getReleaseDate());
         // Set the rating
         RatingBar ratingBar = (RatingBar) findViewById(R.id.movie_rating);
-        ratingBar.setRating((mMovie.getVoteAverage().floatValue() / 10) * 5);
+        ratingBar.setRating((movie.getVoteAverage().floatValue() / 10) * 5);
         // Set the movie overview text
         TextView tvOverview = (TextView) findViewById(R.id.tv_overview);
-        tvOverview.setText(mMovie.getOverview());
+        tvOverview.setText(movie.getOverview());
     }
 
     public void onOpenTmdb(View view) {
@@ -136,5 +176,22 @@ public class DetailsActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    private final LoaderManager.LoaderCallbacks<List<Trailer>> trailerCallbacks = new LoaderManager.LoaderCallbacks<List<Trailer>>() {
+        @Override
+        public Loader<List<Trailer>> onCreateLoader(int id, Bundle args) {
+            return new TrailerLoader(DetailsActivity.this, movie);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<Trailer>> loader, List<Trailer> data) {
+            showTrailers(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<Trailer>> loader) {
+
+        }
+    };
 
 }

@@ -35,7 +35,7 @@ import com.jaredrummler.android.nanodegree.movies.R;
 import com.jaredrummler.android.nanodegree.movies.tmdb.config.MovieSortOrder;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
 import com.jaredrummler.android.nanodegree.movies.ui.details.DetailsActivity;
-import com.jaredrummler.android.nanodegree.movies.ui.movies.adapter.MovieRecyclerViewAdapter;
+import com.jaredrummler.android.nanodegree.movies.ui.movies.adapter.MovieAdapter;
 import com.jaredrummler.android.nanodegree.movies.ui.movies.tasks.FetchMoviesTask;
 import com.jaredrummler.android.nanodegree.movies.utils.Prefs;
 import com.jaredrummler.android.nanodegree.movies.utils.Utils;
@@ -105,8 +105,8 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mRecyclerView != null) {
-            if (mRecyclerView.getAdapter() instanceof MovieRecyclerViewAdapter) {
-                MovieRecyclerViewAdapter adapter = (MovieRecyclerViewAdapter) mRecyclerView.getAdapter();
+            if (mRecyclerView.getAdapter() instanceof MovieAdapter) {
+                MovieAdapter adapter = (MovieAdapter) mRecyclerView.getAdapter();
                 List<Movie> movies = adapter.getMovies();
                 outState.putParcelableArrayList(OUTSTATE_MOVIES, (ArrayList<Movie>) movies);
             }
@@ -122,7 +122,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
         int spanCount = getResources().getInteger(R.integer.movies_column_count);
         GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(new MovieRecyclerViewAdapter(movies, this));
+        mRecyclerView.setAdapter(new MovieAdapter(movies, this));
     }
 
     @Override

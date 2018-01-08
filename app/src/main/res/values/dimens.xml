@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="details_movie_poster_width">120dp</dimen>
+    <dimen name="trailer_thumbnail_width">120dp</dimen>
+    <dimen name="trailer_thumbnail_height">100dp</dimen>
 </resources>
