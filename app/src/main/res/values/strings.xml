@@ -20,6 +20,10 @@
     <string name="no_connection_message">No internet connection found.\nPlease check your connection or try again.</string>
     <string name="no_connection">No connection</string>
 
+    <!-- Movie Detail Titles -->
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+
     <!-- Content description -->
     <eat-comment />
     <string name="desc_movie_backrop">Movie Backdrop</string>
@@ -27,6 +31,5 @@
     <string name="desc_attribution">Attribution</string>
     <string name="desc_logo">Logo</string>
     <string name="desc_movie_thumbnail">Movie thumbnail</string>
-    <string name="trailers">Trailers</string>
 
 </resources>

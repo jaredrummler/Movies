@@ -39,7 +39,11 @@ import com.jaredrummler.android.nanodegree.movies.R;
 import com.jaredrummler.android.nanodegree.movies.tmdb.config.BackropPathSize;
 import com.jaredrummler.android.nanodegree.movies.tmdb.config.PosterPathSize;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.Review;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Trailer;
+import com.jaredrummler.android.nanodegree.movies.ui.details.reviews.ReviewDialog;
+import com.jaredrummler.android.nanodegree.movies.ui.details.reviews.ReviewsAdapter;
+import com.jaredrummler.android.nanodegree.movies.ui.details.reviews.ReviewsLoader;
 import com.jaredrummler.android.nanodegree.movies.ui.details.trailers.TrailerLoader;
 import com.jaredrummler.android.nanodegree.movies.ui.details.trailers.TrailersAdapter;
 import com.squareup.picasso.Callback;
@@ -53,7 +57,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
 
     public static final String EXTRA_MOVIE = "nanodegree.movies.extras.MOVIE";
 
-    private Movie movie;
+    /*package*/ Movie movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +81,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
         movie = getIntent().getParcelableExtra(EXTRA_MOVIE);
 
         // Load the details
-        loadBackdrop();
-        loadPoster();
+        showBackdrop(movie);
+        showPoster(movie);
 
         // Load the trailers
         LoaderManager loaderManager = getSupportLoaderManager();
         loaderManager.initLoader(TrailerLoader.TRAILER_LOADER_ID, null, trailerCallbacks);
+        loaderManager.initLoader(ReviewsLoader.REVIEWS_LOADER_ID, null, reviewsCallbacks);
     }
 
     @Override
@@ -97,61 +102,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
     }
 
     @Override
-    public void showTrailers(@Nullable List<Trailer> trailers) {
-        if (trailers == null || trailers.isEmpty()) {
-            findViewById(R.id.cv_trailers).setVisibility(View.INVISIBLE);
-            return;
-        }
-
-        RecyclerView rvTrailers = findViewById(R.id.rv_trailers);
-        rvTrailers.setVisibility(View.VISIBLE);
-        rvTrailers.setHasFixedSize(true);
-        rvTrailers.setNestedScrollingEnabled(false);
-        findViewById(R.id.pb_trailers).setVisibility(View.GONE);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        rvTrailers.setLayoutManager(layoutManager);
-        rvTrailers.setAdapter(new TrailersAdapter(trailers, this));
-    }
-
-    @Override
-    public void openTrailer(@NonNull Trailer trailer) {
-        Intent watchIntent = trailer.getWatchIntent(this);
-        if (watchIntent != null) {
-            startActivity(watchIntent);
-        }
-    }
-
-    private void loadBackdrop() {
-        ImageView ivMovieBackdrop = (ImageView) findViewById(R.id.iv_movie_backdrop);
-        Uri backdropUri = BackropPathSize.MEDIUM.getUri(movie);
-        Picasso.with(this).load(backdropUri).into(ivMovieBackdrop, new Callback() {
-            @Override
-            public void onSuccess() {
-                // Set the movie details after the image is loaded
-                setMovieDetails();
-            }
-
-            @Override
-            public void onError() {
-                Log.d(TAG, "Error loading backdrop image");
-                setMovieDetails();
-            }
-        });
-    }
-
-    private void loadPoster() {
-        ImageView ivMoviePoster = (ImageView) findViewById(R.id.iv_movie_poster);
-        PosterPathSize posterSize = PosterPathSize.getIdealSize(this);
-        Uri posterUri = posterSize.getUri(movie);
-        //noinspection SuspiciousNameCombination
-        Picasso.with(this)
-                .load(posterUri)
-                .resizeDimen(R.dimen.details_movie_poster_width, R.dimen.details_movie_poster_width)
-                .centerInside()
-                .into(ivMoviePoster);
-    }
-
-    /*package*/ void setMovieDetails() {
+    public void showMovieDetails(Movie movie) {
         // Hide the spinner
         findViewById(R.id.pb_movie_backrop).setVisibility(View.GONE);
         findViewById(R.id.movie_details_layout).setVisibility(View.VISIBLE);
@@ -168,6 +119,87 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
         TextView tvOverview = (TextView) findViewById(R.id.tv_overview);
         tvOverview.setText(movie.getOverview());
     }
+
+    @Override
+    public void showBackdrop(@NonNull final Movie movie) {
+        ImageView ivMovieBackdrop = (ImageView) findViewById(R.id.iv_movie_backdrop);
+        Uri backdropUri = BackropPathSize.MEDIUM.getUri(movie);
+        Picasso.with(this).load(backdropUri).into(ivMovieBackdrop, new Callback() {
+            @Override
+            public void onSuccess() {
+                // Set the movie details after the image is loaded
+                showMovieDetails(movie);
+            }
+
+            @Override
+            public void onError() {
+                Log.d(TAG, "Error loading backdrop image");
+                showMovieDetails(movie);
+            }
+        });
+    }
+
+    @Override
+    public void showPoster(@NonNull Movie movie) {
+        ImageView ivMoviePoster = (ImageView) findViewById(R.id.iv_movie_poster);
+        PosterPathSize posterSize = PosterPathSize.getIdealSize(this);
+        Uri posterUri = posterSize.getUri(movie);
+        //noinspection SuspiciousNameCombination
+        Picasso.with(this)
+                .load(posterUri)
+                .resizeDimen(R.dimen.details_movie_poster_width, R.dimen.details_movie_poster_width)
+                .centerInside()
+                .into(ivMoviePoster);
+    }
+
+    @Override
+    public void showTrailers(@Nullable List<Trailer> trailers) {
+        if (trailers == null || trailers.isEmpty()) {
+            findViewById(R.id.cv_trailers).setVisibility(View.GONE);
+            return;
+        }
+
+        RecyclerView rvTrailers = findViewById(R.id.rv_trailers);
+        rvTrailers.setVisibility(View.VISIBLE);
+        rvTrailers.setHasFixedSize(true);
+        rvTrailers.setNestedScrollingEnabled(false);
+        findViewById(R.id.pb_trailers).setVisibility(View.GONE);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rvTrailers.setLayoutManager(layoutManager);
+        rvTrailers.setAdapter(new TrailersAdapter(trailers, this));
+    }
+
+    @Override
+    public void openTrailer(@NonNull Trailer trailer) {
+        Intent watchIntent = trailer.getWatchIntent(this);
+        if (watchIntent != null) {
+            startActivity(watchIntent);
+        }
+    }
+
+    @Override
+    public void showReviews(@Nullable List<Review> reviews) {
+        if (reviews == null || reviews.isEmpty()) {
+            findViewById(R.id.cv_reviews).setVisibility(View.GONE);
+            return;
+        }
+
+        RecyclerView rvReviews = findViewById(R.id.rv_reviews);
+        rvReviews.setVisibility(View.VISIBLE);
+        rvReviews.setHasFixedSize(true);
+        rvReviews.setNestedScrollingEnabled(false);
+        findViewById(R.id.pb_reviews).setVisibility(View.GONE);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        rvReviews.setLayoutManager(layoutManager);
+        rvReviews.setAdapter(new ReviewsAdapter(reviews, this));
+    }
+
+    @Override
+    public void openReview(@NonNull Review review) {
+        ReviewDialog.show(this, review);
+    }
+
+
 
     public void onOpenTmdb(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -190,6 +222,23 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
 
         @Override
         public void onLoaderReset(Loader<List<Trailer>> loader) {
+
+        }
+    };
+
+    private final LoaderManager.LoaderCallbacks<List<Review>> reviewsCallbacks = new LoaderManager.LoaderCallbacks<List<Review>>() {
+        @Override
+        public Loader<List<Review>> onCreateLoader(int id, Bundle args) {
+            return new ReviewsLoader(DetailsActivity.this, movie);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<Review>> loader, List<Review> data) {
+            showReviews(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<Review>> loader) {
 
         }
     };

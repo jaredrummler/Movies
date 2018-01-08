@@ -19,14 +19,26 @@ package com.jaredrummler.android.nanodegree.movies.ui.details;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.Review;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Trailer;
 
 import java.util.List;
 
 public interface DetailsView {
 
+    void showMovieDetails(@NonNull Movie movie);
+
+    void showBackdrop(@NonNull Movie movie);
+
+    void showPoster(@NonNull Movie movie);
+
     void showTrailers(@Nullable List<Trailer> trailers);
 
     void openTrailer(@NonNull Trailer trailer);
+
+    void showReviews(@Nullable List<Review> reviews);
+
+    void openReview(@NonNull Review review);
 
 }
