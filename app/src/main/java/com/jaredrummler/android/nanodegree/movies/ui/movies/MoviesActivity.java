@@ -49,22 +49,22 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
 
     private static final String OUTSTATE_MOVIES = "nanodegree.state.MOVIES";
 
-    private Prefs mPrefs;
+    private Prefs prefs;
 
-    private RecyclerView mRecyclerView;
-    private ProgressBar mProgressBar;
-    private ViewGroup mErrorLayout;
+    private RecyclerView recyclerView;
+    private ProgressBar progressBar;
+    private ViewGroup errorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Find views
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movies);
-        mProgressBar = (ProgressBar) findViewById(R.id.pb_movies_progress);
-        mErrorLayout = (ConstraintLayout) findViewById(R.id.error_layout);
+        recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
+        progressBar = (ProgressBar) findViewById(R.id.pb_movies_progress);
+        errorLayout = (ConstraintLayout) findViewById(R.id.error_layout);
         // Get preferences for sort order
-        mPrefs = Prefs.with(this);
+        prefs = Prefs.with(this);
         // Load the movies
         if (savedInstanceState == null || !savedInstanceState.containsKey(OUTSTATE_MOVIES)) {
             loadMovies();
@@ -79,7 +79,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         // Check the sort order preference
-        int sortOrderMenuId = Utils.getSortOrderMenuId(mPrefs.getMovieSortOrder());
+        int sortOrderMenuId = Utils.getSortOrderMenuId(prefs.getMovieSortOrder());
         menu.findItem(sortOrderMenuId).setChecked(true);
         return super.onCreateOptionsMenu(menu);
     }
@@ -92,7 +92,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
             case R.id.action_sort_top_rated:
             case R.id.action_sort_upcoming:
                 MovieSortOrder sortOrder = Utils.getMovieSortOrder(item.getItemId());
-                mPrefs.saveMovieSortOrder(sortOrder);
+                prefs.saveMovieSortOrder(sortOrder);
                 item.setChecked(true);
                 loadMovies();
                 return true;
@@ -104,9 +104,9 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mRecyclerView != null) {
-            if (mRecyclerView.getAdapter() instanceof MovieAdapter) {
-                MovieAdapter adapter = (MovieAdapter) mRecyclerView.getAdapter();
+        if (recyclerView != null) {
+            if (recyclerView.getAdapter() instanceof MovieAdapter) {
+                MovieAdapter adapter = (MovieAdapter) recyclerView.getAdapter();
                 List<Movie> movies = adapter.getMovies();
                 outState.putParcelableArrayList(OUTSTATE_MOVIES, (ArrayList<Movie>) movies);
             }
@@ -115,14 +115,14 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
 
     @Override
     public void onFetchedMovies(@NonNull List<Movie> movies) {
-        mErrorLayout.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
-        mRecyclerView.setHasFixedSize(true);
+        errorLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        recyclerView.setHasFixedSize(true);
         int spanCount = getResources().getInteger(R.integer.movies_column_count);
         GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(new MovieAdapter(movies, this));
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(new MovieAdapter(movies, this));
     }
 
     @Override
@@ -134,9 +134,9 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
 
     @Override
     public void onFailedToFetchMovies(@Nullable String reason) {
-        mErrorLayout.setVisibility(View.VISIBLE);
-        mRecyclerView.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.GONE);
+        errorLayout.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
         TextView tvErrorMessage = (TextView) findViewById(R.id.tv_error_message);
         if (reason != null) {
             tvErrorMessage.setText(reason);
@@ -154,10 +154,10 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
             onFailedToFetchMovies(null);
             return;
         }
-        mErrorLayout.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
-        new FetchMoviesTask(this).execute(mPrefs.getMovieSortOrder());
+        errorLayout.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        new FetchMoviesTask(this).execute(prefs.getMovieSortOrder());
     }
 
 }
