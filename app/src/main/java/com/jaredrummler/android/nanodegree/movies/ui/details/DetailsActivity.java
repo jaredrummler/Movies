@@ -142,7 +142,7 @@ public class DetailsActivity extends AppCompatActivity
         //noinspection SuspiciousNameCombination
         Picasso.with(this)
                 .load(posterUri)
-                .resizeDimen(R.dimen.details_movie_poster_width, R.dimen.details_movie_poster_width)
+                .resizeDimen(R.dimen.poster_width_small, R.dimen.poster_height_small)
                 .centerInside()
                 .into(ivMoviePoster);
     }
