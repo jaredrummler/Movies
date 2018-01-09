@@ -35,14 +35,14 @@ import android.widget.TextView;
 
 import com.jaredrummler.android.nanodegree.movies.R;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
-import com.jaredrummler.android.nanodegree.movies.tmdb.model.MoviesResponse;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.MovieList;
 import com.jaredrummler.android.nanodegree.movies.ui.details.DetailsActivity;
 import com.jaredrummler.android.nanodegree.movies.ui.movies.adapter.MovieAdapter;
 import com.jaredrummler.android.nanodegree.movies.utils.Prefs;
 
 import java.util.List;
 
-public class MoviesActivity extends AppCompatActivity implements MoviesView, LoaderManager.LoaderCallbacks<MoviesResponse> {
+public class MoviesActivity extends AppCompatActivity implements MoviesView, LoaderManager.LoaderCallbacks<MovieList> {
 
     private static final String TAG = "MainActivity";
 
@@ -131,21 +131,21 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView, Loa
     }
 
     @Override
-    public Loader<MoviesResponse> onCreateLoader(int id, Bundle args) {
+    public Loader<MovieList> onCreateLoader(int id, Bundle args) {
         return new MovieLoader(MoviesActivity.this, prefs.getMovieSortOrder());
     }
 
     @Override
-    public void onLoadFinished(Loader<MoviesResponse> loader, MoviesResponse data) {
+    public void onLoadFinished(Loader<MovieList> loader, MovieList data) {
         if (data == null) {
             showErrorView(null);
         } else {
-            showMovies(data.getResults());
+            showMovies(data.getMovies());
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<MoviesResponse> loader) {
+    public void onLoaderReset(Loader<MovieList> loader) {
 
     }
 

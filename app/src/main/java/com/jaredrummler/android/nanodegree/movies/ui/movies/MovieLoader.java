@@ -28,7 +28,7 @@ import com.jaredrummler.android.nanodegree.movies.BuildConfig;
 import com.jaredrummler.android.nanodegree.movies.tmdb.TmdbApiClient;
 import com.jaredrummler.android.nanodegree.movies.tmdb.db.MovieContract.MovieEntry;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
-import com.jaredrummler.android.nanodegree.movies.tmdb.model.MoviesResponse;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.MovieList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,12 +39,12 @@ import java.util.regex.Pattern;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class MovieLoader extends AsyncTaskLoader<MoviesResponse> {
+public class MovieLoader extends AsyncTaskLoader<MovieList> {
 
     private static final String TAG = "MovieLoader";
 
     private final MovieOrder movieOrder;
-    private MoviesResponse response;
+    private MovieList response;
 
     public MovieLoader(@NonNull Context context, @NonNull MovieOrder movieOrder) {
         super(context);
@@ -62,24 +62,24 @@ public class MovieLoader extends AsyncTaskLoader<MoviesResponse> {
 
     @Nullable
     @Override
-    public MoviesResponse loadInBackground() {
+    public MovieList loadInBackground() {
         if (movieOrder == MovieOrder.FAVORITES) {
             List<Movie> movies = getMoviesFromDatabase();
             if (movies == null) return null;
-            MoviesResponse response = new MoviesResponse();
+            MovieList response = new MovieList();
             response.setPage(1);
             response.setTotalPages(1);
-            response.setResults(movies);
+            response.setMovies(movies);
             response.setTotalResults(movies.size());
             return response;
         }
 
-        Call<MoviesResponse> call = TmdbApiClient.INSTANCE.fetchMovies(
+        Call<MovieList> call = TmdbApiClient.INSTANCE.fetchMovies(
                 movieOrder.path, BuildConfig.TMDB_API_KEY
         );
 
         try {
-            Response<MoviesResponse> response = call.execute();
+            Response<MovieList> response = call.execute();
             return response.body();
         } catch (IOException e) {
             Log.e(TAG, "Error getting response from API", e);
@@ -89,7 +89,7 @@ public class MovieLoader extends AsyncTaskLoader<MoviesResponse> {
     }
 
     @Override
-    public void deliverResult(@Nullable MoviesResponse data) {
+    public void deliverResult(@Nullable MovieList data) {
         response = data;
         super.deliverResult(data);
     }

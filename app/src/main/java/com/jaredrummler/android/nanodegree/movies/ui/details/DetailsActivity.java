@@ -30,7 +30,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,24 +40,25 @@ import com.jaredrummler.android.nanodegree.movies.R;
 import com.jaredrummler.android.nanodegree.movies.tmdb.config.BackropPathSize;
 import com.jaredrummler.android.nanodegree.movies.tmdb.config.PosterPathSize;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.MovieDetails;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Review;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Trailer;
 import com.jaredrummler.android.nanodegree.movies.ui.details.reviews.ReviewDialog;
 import com.jaredrummler.android.nanodegree.movies.ui.details.reviews.ReviewsAdapter;
-import com.jaredrummler.android.nanodegree.movies.ui.details.reviews.ReviewsLoader;
-import com.jaredrummler.android.nanodegree.movies.ui.details.trailers.TrailerLoader;
 import com.jaredrummler.android.nanodegree.movies.ui.details.trailers.TrailersAdapter;
 import com.jaredrummler.android.nanodegree.movies.utils.MovieFavorites;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class DetailsActivity extends AppCompatActivity implements DetailsView {
+public class DetailsActivity extends AppCompatActivity
+        implements DetailsView, LoaderManager.LoaderCallbacks<MovieDetails> {
 
     private static final String TAG = "DetailsActivity";
 
     public static final String EXTRA_MOVIE = "nanodegree.movies.extras.MOVIE";
+
+    private static final int LOADER_DETAILS = 312;
 
     /*package*/ MovieFavorites favorites;
     /*package*/ Movie movie;
@@ -86,13 +86,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
         favorites = new MovieFavorites(this);
 
         // Load the details
+        showMovieDetails(movie);
         showBackdrop(movie);
         showPoster(movie);
 
         // Load the trailers
         LoaderManager loaderManager = getSupportLoaderManager();
-        loaderManager.initLoader(TrailerLoader.TRAILER_LOADER_ID, null, trailerCallbacks);
-        loaderManager.initLoader(ReviewsLoader.REVIEWS_LOADER_ID, null, reviewsCallbacks);
+        loaderManager.initLoader(LOADER_DETAILS, null, this);
     }
 
     @Override
@@ -131,19 +131,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
     public void showBackdrop(@NonNull final Movie movie) {
         ImageView ivMovieBackdrop = (ImageView) findViewById(R.id.iv_movie_backdrop);
         Uri backdropUri = BackropPathSize.MEDIUM.getUri(movie);
-        Picasso.with(this).load(backdropUri).into(ivMovieBackdrop, new Callback() {
-            @Override
-            public void onSuccess() {
-                // Set the movie details after the image is loaded
-                showMovieDetails(movie);
-            }
-
-            @Override
-            public void onError() {
-                Log.d(TAG, "Error loading backdrop image");
-                showMovieDetails(movie);
-            }
-        });
+        Picasso.with(this).load(backdropUri).into(ivMovieBackdrop);
     }
 
     @Override
@@ -242,38 +230,20 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
         }
     }
 
-    private final LoaderManager.LoaderCallbacks<List<Trailer>> trailerCallbacks = new LoaderManager.LoaderCallbacks<List<Trailer>>() {
-        @Override
-        public Loader<List<Trailer>> onCreateLoader(int id, Bundle args) {
-            return new TrailerLoader(DetailsActivity.this, movie);
-        }
+    @Override
+    public Loader<MovieDetails> onCreateLoader(int id, Bundle args) {
+        return new DetailsLoader(this, movie);
+    }
 
-        @Override
-        public void onLoadFinished(Loader<List<Trailer>> loader, List<Trailer> data) {
-            showTrailers(data);
-        }
+    @Override
+    public void onLoadFinished(Loader<MovieDetails> loader, MovieDetails data) {
+        showReviews(data.getReviews().getResults());
+        showTrailers(data.getVideos().getTrailers());
+    }
 
-        @Override
-        public void onLoaderReset(Loader<List<Trailer>> loader) {
+    @Override
+    public void onLoaderReset(Loader<MovieDetails> loader) {
 
-        }
-    };
-
-    private final LoaderManager.LoaderCallbacks<List<Review>> reviewsCallbacks = new LoaderManager.LoaderCallbacks<List<Review>>() {
-        @Override
-        public Loader<List<Review>> onCreateLoader(int id, Bundle args) {
-            return new ReviewsLoader(DetailsActivity.this, movie);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<List<Review>> loader, List<Review> data) {
-            showReviews(data);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<List<Review>> loader) {
-
-        }
-    };
+    }
 
 }

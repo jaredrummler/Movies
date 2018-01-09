@@ -14,67 +14,62 @@
  * limitations under the License.
  */
 
-package com.jaredrummler.android.nanodegree.movies.ui.details.trailers;
+package com.jaredrummler.android.nanodegree.movies.ui.details;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.jaredrummler.android.nanodegree.movies.BuildConfig;
-import com.jaredrummler.android.nanodegree.movies.tmdb.TmdbApi;
 import com.jaredrummler.android.nanodegree.movies.tmdb.TmdbApiClient;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
-import com.jaredrummler.android.nanodegree.movies.tmdb.model.Trailer;
-import com.jaredrummler.android.nanodegree.movies.tmdb.model.TrailerResponse;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.MovieDetails;
 
 import java.io.IOException;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class TrailerLoader extends AsyncTaskLoader<List<Trailer>> {
+public class DetailsLoader extends AsyncTaskLoader<MovieDetails> {
 
-    public static final int TRAILER_LOADER_ID = 100;
-
-    private List<Trailer> trailers;
+    private MovieDetails movieDetails;
     private final Movie movie;
 
-    public TrailerLoader(Context context, Movie movie) {
+    public DetailsLoader(Context context, @NonNull Movie movie) {
         super(context);
         this.movie = movie;
     }
 
     @Override
     protected void onStartLoading() {
-        if (this.trailers != null) {
-            deliverResult(trailers);
-        } else {
+        if (movieDetails == null) {
             forceLoad();
+        } else {
+            deliverResult(movieDetails);
         }
     }
 
     @Override
-    public List<Trailer> loadInBackground() {
-        TmdbApi api = TmdbApiClient.INSTANCE;
-        Call<TrailerResponse> call = api.fetchTrailers(movie.getId(), BuildConfig.TMDB_API_KEY);
+    public MovieDetails loadInBackground() {
+        Call<MovieDetails> call = TmdbApiClient.INSTANCE.fetchDetails(
+                movie.getId(), BuildConfig.TMDB_API_KEY, "videos,reviews"
+        );
+
+        MovieDetails details = null;
         try {
-            Response<TrailerResponse> response = call.execute();
-            if (response.isSuccessful()) {
-                TrailerResponse body = response.body();
-                if (body != null) {
-                    return body.getTrailers();
-                }
-            }
+            Response<MovieDetails> response = call.execute();
+            details = response.body();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+
+        return details;
     }
 
     @Override
-    public void deliverResult(@Nullable List<Trailer> data) {
-        this.trailers = data;
+    public void deliverResult(MovieDetails data) {
+        movieDetails = data;
         super.deliverResult(data);
     }
+
 }

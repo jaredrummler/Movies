@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Jared Rummler
+ * Copyright (C) 2017 Jared Rummler
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,40 +23,31 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ReviewResponse implements Parcelable {
-
-    @SerializedName("id")
-    private Integer id;
+/**
+ * Contains movies from The Movie DB API.
+ */
+public class MovieList implements Parcelable {
 
     @SerializedName("page")
     private Integer page;
 
-    @SerializedName("results")
-    private List<Review> reviews;
+    @SerializedName("total_results")
+    private Integer totalResults;
 
     @SerializedName("total_pages")
     private Integer totalPages;
 
-    @SerializedName("total_results")
-    private Integer totalResults;
+    @SerializedName("results")
+    private List<Movie> movies;
 
-    public ReviewResponse() {
+    public MovieList() {
     }
 
-    protected ReviewResponse(Parcel in) {
-        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+    protected MovieList(Parcel in) {
         this.page = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.reviews = in.createTypedArrayList(Review.CREATOR);
-        this.totalPages = (Integer) in.readValue(Integer.class.getClassLoader());
         this.totalResults = (Integer) in.readValue(Integer.class.getClassLoader());
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+        this.totalPages = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.movies = in.createTypedArrayList(Movie.CREATOR);
     }
 
     public Integer getPage() {
@@ -67,12 +58,12 @@ public class ReviewResponse implements Parcelable {
         this.page = page;
     }
 
-    public List<Review> getReviews() {
-        return reviews;
+    public Integer getTotalResults() {
+        return totalResults;
     }
 
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
+    public void setTotalResults(Integer totalResults) {
+        this.totalResults = totalResults;
     }
 
     public Integer getTotalPages() {
@@ -83,12 +74,12 @@ public class ReviewResponse implements Parcelable {
         this.totalPages = totalPages;
     }
 
-    public Integer getTotalResults() {
-        return totalResults;
+    public List<Movie> getMovies() {
+        return movies;
     }
 
-    public void setTotalResults(Integer totalResults) {
-        this.totalResults = totalResults;
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
     }
 
     @Override
@@ -98,22 +89,22 @@ public class ReviewResponse implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.id);
         dest.writeValue(this.page);
-        dest.writeTypedList(this.reviews);
-        dest.writeValue(this.totalPages);
         dest.writeValue(this.totalResults);
+        dest.writeValue(this.totalPages);
+        dest.writeTypedList(this.movies);
     }
 
-    public static final Parcelable.Creator<ReviewResponse> CREATOR = new Parcelable.Creator<ReviewResponse>() {
+    public static final Parcelable.Creator<MovieList> CREATOR = new Parcelable.Creator<MovieList>() {
         @Override
-        public ReviewResponse createFromParcel(Parcel source) {
-            return new ReviewResponse(source);
+        public MovieList createFromParcel(Parcel source) {
+            return new MovieList(source);
         }
 
         @Override
-        public ReviewResponse[] newArray(int size) {
-            return new ReviewResponse[size];
+        public MovieList[] newArray(int size) {
+            return new MovieList[size];
         }
     };
+
 }

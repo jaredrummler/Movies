@@ -204,11 +204,11 @@ public class Movie implements Parcelable {
         this.voteAverage = voteAverage;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
     }
+
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -228,10 +228,10 @@ public class Movie implements Parcelable {
         dest.writeValue(this.voteAverage);
     }
 
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
-        public Movie createFromParcel(Parcel source) {
-            return new Movie(source);
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
         }
 
         @Override
@@ -239,4 +239,5 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
 }

@@ -81,7 +81,7 @@
             <ImageView
                 android:id="@+id/iv_movie_poster"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="120dp"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/desc_movie_poster"
                 app:layout_constraintStart_toStartOf="@+id/guidelineStart"
@@ -192,7 +192,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
-                        android:text="@string/trailers"
+                        android:text="@string/videos"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         android:textSize="13sp"
                         android:textStyle="bold"

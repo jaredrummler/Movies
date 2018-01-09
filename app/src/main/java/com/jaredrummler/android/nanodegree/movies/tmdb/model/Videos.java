@@ -23,7 +23,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class TrailerResponse implements Parcelable {
+public class Videos implements Parcelable {
 
     @SerializedName("id")
     private String id;
@@ -31,10 +31,10 @@ public class TrailerResponse implements Parcelable {
     @SerializedName("results")
     private List<Trailer> trailers;
 
-    public TrailerResponse() {
+    public Videos() {
     }
 
-    protected TrailerResponse(Parcel in) {
+    protected Videos(Parcel in) {
         this.id = in.readString();
         this.trailers = in.createTypedArrayList(Trailer.CREATOR);
     }
@@ -67,15 +67,15 @@ public class TrailerResponse implements Parcelable {
     }
 
 
-    public static final Parcelable.Creator<TrailerResponse> CREATOR = new Parcelable.Creator<TrailerResponse>() {
+    public static final Parcelable.Creator<Videos> CREATOR = new Parcelable.Creator<Videos>() {
         @Override
-        public TrailerResponse createFromParcel(Parcel source) {
-            return new TrailerResponse(source);
+        public Videos createFromParcel(Parcel source) {
+            return new Videos(source);
         }
 
         @Override
-        public TrailerResponse[] newArray(int size) {
-            return new TrailerResponse[size];
+        public Videos[] newArray(int size) {
+            return new Videos[size];
         }
     };
 }
