@@ -19,8 +19,10 @@ package com.jaredrummler.android.nanodegree.movies.ui.details;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.Loader;
@@ -46,6 +48,7 @@ import com.jaredrummler.android.nanodegree.movies.ui.details.reviews.ReviewsAdap
 import com.jaredrummler.android.nanodegree.movies.ui.details.reviews.ReviewsLoader;
 import com.jaredrummler.android.nanodegree.movies.ui.details.trailers.TrailerLoader;
 import com.jaredrummler.android.nanodegree.movies.ui.details.trailers.TrailersAdapter;
+import com.jaredrummler.android.nanodegree.movies.utils.MovieFavorites;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -57,6 +60,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
 
     public static final String EXTRA_MOVIE = "nanodegree.movies.extras.MOVIE";
 
+    /*package*/ MovieFavorites favorites;
     /*package*/ Movie movie;
 
     @Override
@@ -79,6 +83,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
 
         // Get the Movie
         movie = getIntent().getParcelableExtra(EXTRA_MOVIE);
+        favorites = new MovieFavorites(this);
 
         // Load the details
         showBackdrop(movie);
@@ -102,7 +107,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
     }
 
     @Override
-    public void showMovieDetails(Movie movie) {
+    public void showMovieDetails(final Movie movie) {
         // Hide the spinner
         findViewById(R.id.pb_movie_backrop).setVisibility(View.GONE);
         findViewById(R.id.movie_details_layout).setVisibility(View.VISIBLE);
@@ -118,6 +123,8 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
         // Set the movie overview text
         TextView tvOverview = (TextView) findViewById(R.id.tv_overview);
         tvOverview.setText(movie.getOverview());
+        // Show the FAB
+        updateFavoritesView();
     }
 
     @Override
@@ -199,7 +206,33 @@ public class DetailsActivity extends AppCompatActivity implements DetailsView {
         ReviewDialog.show(this, review);
     }
 
-
+    @Override
+    public void updateFavoritesView() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_favorite);
+        if (fab.getVisibility() == View.GONE) {
+            // Setup and show the FAB for the first time.
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (favorites.isFavorite(movie)) {
+                        favorites.remove(movie);
+                    } else {
+                        favorites.save(movie);
+                    }
+                    updateFavoritesView();
+                }
+            });
+        }
+        // Set the correct image resource.
+        @DrawableRes int icon;
+        if (favorites.isFavorite(movie)) {
+            icon = R.drawable.ic_favorite_white_24dp;
+        } else {
+            icon = R.drawable.ic_favorite_border_white_24dp;
+        }
+        fab.setImageResource(icon);
+    }
 
     public void onOpenTmdb(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW);

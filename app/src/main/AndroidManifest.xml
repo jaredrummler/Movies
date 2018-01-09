@@ -32,6 +32,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.movies.MoviesActivity" />
         </activity>
+
+        <provider
+            android:name=".tmdb.db.MovieContentProvider"
+            android:authorities="com.jaredrummler.android.nanodegree.movies"
+            android:exported="false" />
     </application>
 
 </manifest>

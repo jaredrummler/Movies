@@ -41,4 +41,6 @@ public interface DetailsView {
 
     void openReview(@NonNull Review review);
 
+    void updateFavoritesView();
+
 }
