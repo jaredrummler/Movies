@@ -32,5 +32,6 @@
     <string name="desc_logo">Logo</string>
     <string name="desc_movie_thumbnail">Movie thumbnail</string>
     <string name="sort_favorites">Favorites</string>
+    <string name="action_share">Share</string>
 
 </resources>

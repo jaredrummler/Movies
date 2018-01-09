@@ -70,11 +70,15 @@ public class Trailer implements Parcelable {
         return null;
     }
 
+    public String getYouTubeUrl() {
+        return "https://www.youtube.com/watch?v=" + key;
+    }
+
     public Intent getWatchIntent(Context context) {
         String source = site == null ? "YOUTUBE" : site.toUpperCase();
         if ("YOUTUBE".equals(source)) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("https://www.youtube.com/watch?v=" + key));
+            intent.setData(Uri.parse(getYouTubeUrl()));
             return intent;
         }
         return null;

@@ -30,6 +30,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -58,10 +59,13 @@ public class DetailsActivity extends AppCompatActivity
 
     public static final String EXTRA_MOVIE = "nanodegree.movies.extras.MOVIE";
 
+    private static final String OUTSTATE_MOVIE_DETAIL = "movie_detail";
+
     private static final int LOADER_DETAILS = 312;
 
     /*package*/ MovieFavorites favorites;
     /*package*/ Movie movie;
+    private MovieDetails movieDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,10 @@ public class DetailsActivity extends AppCompatActivity
         // Ensure we have a movie
         if (!getIntent().hasExtra(EXTRA_MOVIE)) {
             throw new RuntimeException("Please pass a movie to the DetailsActivity");
+        }
+
+        if (savedInstanceState != null) {
+            movieDetails = savedInstanceState.getParcelable(OUTSTATE_MOVIE_DETAIL);
         }
 
         setContentView(R.layout.activity_details);
@@ -95,11 +103,28 @@ public class DetailsActivity extends AppCompatActivity
         loaderManager.initLoader(LOADER_DETAILS, null, this);
     }
 
+    private android.widget.ShareActionProvider shareProvider;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.details, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(OUTSTATE_MOVIE_DETAIL, movieDetails);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.action_share:
+                startActivity(Intent.createChooser(getShareIntent(), getString(R.string.action_share)));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -222,6 +247,23 @@ public class DetailsActivity extends AppCompatActivity
         fab.setImageResource(icon);
     }
 
+    @Override
+    public Loader<MovieDetails> onCreateLoader(int id, Bundle args) {
+        return new DetailsLoader(this, movie);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<MovieDetails> loader, MovieDetails data) {
+        movieDetails = data;
+        showReviews(data.getReviews().getResults());
+        showTrailers(data.getVideos().getTrailers());
+    }
+
+    @Override
+    public void onLoaderReset(Loader<MovieDetails> loader) {
+
+    }
+
     public void onOpenTmdb(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("https://www.themoviedb.org/"));
@@ -230,20 +272,20 @@ public class DetailsActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public Loader<MovieDetails> onCreateLoader(int id, Bundle args) {
-        return new DetailsLoader(this, movie);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<MovieDetails> loader, MovieDetails data) {
-        showReviews(data.getReviews().getResults());
-        showTrailers(data.getVideos().getTrailers());
-    }
-
-    @Override
-    public void onLoaderReset(Loader<MovieDetails> loader) {
-
+    private Intent getShareIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        StringBuilder message = new StringBuilder();
+        message.append("Check out \"").append(movie.getTitle()).append('\"');
+        if (movieDetails != null) {
+            try {
+                message.append(" - ").append(movieDetails.getTagline());
+                message.append("\n\n").append(movieDetails.getVideos().getTrailers().get(0).getYouTubeUrl());
+            } catch (Exception ignored) {
+            }
+        }
+        shareIntent.putExtra(Intent.EXTRA_TEXT, message.toString());
+        return shareIntent;
     }
 
 }
