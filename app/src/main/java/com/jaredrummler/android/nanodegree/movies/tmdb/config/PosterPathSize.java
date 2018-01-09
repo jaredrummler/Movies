@@ -87,7 +87,6 @@ public enum PosterPathSize {
      *
      * @param movie The movie
      * @return The Uri for the movie poster
-     * @see Utils#getMovieSortOrder(int)
      */
     public Uri getUri(@NonNull Movie movie) {
         return Uri.parse(TMDB_IMAGE_BASE_URL + size + "/" + movie.getPosterPath());

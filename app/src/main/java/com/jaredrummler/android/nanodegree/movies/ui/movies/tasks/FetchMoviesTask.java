@@ -22,7 +22,7 @@ import android.util.Log;
 
 import com.jaredrummler.android.nanodegree.movies.BuildConfig;
 import com.jaredrummler.android.nanodegree.movies.tmdb.TmdbApiClient;
-import com.jaredrummler.android.nanodegree.movies.tmdb.config.MovieSortOrder;
+import com.jaredrummler.android.nanodegree.movies.ui.movies.MovieOrder;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.MoviesResponse;
 import com.jaredrummler.android.nanodegree.movies.ui.movies.MoviesView;
 import com.jaredrummler.android.nanodegree.movies.utils.Prefs;
@@ -36,7 +36,7 @@ import retrofit2.Response;
 /**
  * An {@link AsyncTask} to fetch movies using The Movie DB API.
  */
-public class FetchMoviesTask extends AsyncTask<MovieSortOrder, Void, MoviesResponse> {
+public class FetchMoviesTask extends AsyncTask<MovieOrder, Void, MoviesResponse> {
 
     private static final String TAG = "FetchMoviesTask";
 
@@ -47,8 +47,8 @@ public class FetchMoviesTask extends AsyncTask<MovieSortOrder, Void, MoviesRespo
     }
 
     @Override
-    protected MoviesResponse doInBackground(MovieSortOrder... params) {
-        MovieSortOrder sortOrder = params.length == 0 ? Prefs.DEFAULT_SORT_ORDER : params[0];
+    protected MoviesResponse doInBackground(MovieOrder... params) {
+        MovieOrder sortOrder = params.length == 0 ? Prefs.DEFAULT_SORT_ORDER : params[0];
 
         Call<MoviesResponse> call = TmdbApiClient.INSTANCE.fetchMovies(
                 sortOrder.path, BuildConfig.TMDB_API_KEY
@@ -69,9 +69,9 @@ public class FetchMoviesTask extends AsyncTask<MovieSortOrder, Void, MoviesRespo
         MoviesView callback = moviesView.get();
         if (callback != null) {
             if (response != null && response.getResults() != null) {
-                callback.onFetchedMovies(response.getResults());
+                callback.showMovies(response.getResults());
             } else {
-                callback.onFailedToFetchMovies(null);
+                callback.showErrorView(null);
             }
         }
     }

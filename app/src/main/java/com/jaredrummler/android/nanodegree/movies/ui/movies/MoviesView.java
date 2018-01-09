@@ -30,20 +30,20 @@ public interface MoviesView {
      *
      * @param movie The movie that was clicked
      */
-    void onMovieClicked(@NonNull Movie movie);
+    void openMovieDetails(@NonNull Movie movie);
 
     /**
      * Called when movies were loaded from The Movie DB API.
      *
      * @param movies The list of movies
      */
-    void onFetchedMovies(@NonNull List<Movie> movies);
+    void showMovies(@NonNull List<Movie> movies);
 
     /**
      * Called when an error occurred while fetching the movies.
      *
      * @param reason Optional reason for failure
      */
-    void onFailedToFetchMovies(@Nullable String reason);
+    void showErrorView(@Nullable String reason);
 
 }

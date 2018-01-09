@@ -21,6 +21,9 @@
                 <item
                     android:id="@+id/action_sort_now_playing"
                     android:title="@string/sort_now_playing" />
+                <item
+                    android:id="@+id/action_sort_favorites"
+                    android:title="@string/sort_favorites" />
             </group>
         </menu>
     </item>

@@ -20,15 +20,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.jaredrummler.android.nanodegree.movies.tmdb.config.MovieSortOrder;
+import com.jaredrummler.android.nanodegree.movies.ui.movies.MovieOrder;
 
 /**
  * Shared preference helper for the app
  */
 public class Prefs {
 
-    public static final String PREF_MOVIE_SORT_ORDER = "movie_sort_order";
-    public static final MovieSortOrder DEFAULT_SORT_ORDER = MovieSortOrder.POPULAR;
+    public static final String PREF_MOVIE_SORT_ORDER = "movie_order";
+    public static final MovieOrder DEFAULT_SORT_ORDER = MovieOrder.POPULAR;
 
     private static Prefs singleton;
 
@@ -49,9 +49,9 @@ public class Prefs {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
     }
 
-    public MovieSortOrder getMovieSortOrder() {
+    public MovieOrder getMovieSortOrder() {
         String value = preferences.getString(PREF_MOVIE_SORT_ORDER, DEFAULT_SORT_ORDER.path);
-        for (MovieSortOrder sortOrder : MovieSortOrder.values()) {
+        for (MovieOrder sortOrder : MovieOrder.values()) {
             if (sortOrder.path.equals(value)) {
                 return sortOrder;
             }
@@ -59,7 +59,7 @@ public class Prefs {
         return DEFAULT_SORT_ORDER;
     }
 
-    public void saveMovieSortOrder(MovieSortOrder sortOrder) {
+    public void saveMovieSortOrder(MovieOrder sortOrder) {
         preferences.edit().putString(PREF_MOVIE_SORT_ORDER, sortOrder.path).apply();
     }
 

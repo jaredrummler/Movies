@@ -46,6 +46,7 @@ public class App extends Application {
 
     protected OkHttpClient.Builder buildOkHttpClient() {
         return new OkHttpClient.Builder()
+                .cache(OkHttp3Downloader.createDefaultCache(this))
                 .retryOnConnectionFailure(true);
     }
 

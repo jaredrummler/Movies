@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,22 +34,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jaredrummler.android.nanodegree.movies.R;
-import com.jaredrummler.android.nanodegree.movies.tmdb.config.MovieSortOrder;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.MoviesResponse;
 import com.jaredrummler.android.nanodegree.movies.ui.details.DetailsActivity;
 import com.jaredrummler.android.nanodegree.movies.ui.movies.adapter.MovieAdapter;
-import com.jaredrummler.android.nanodegree.movies.ui.movies.tasks.FetchMoviesTask;
 import com.jaredrummler.android.nanodegree.movies.utils.Prefs;
-import com.jaredrummler.android.nanodegree.movies.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MoviesActivity extends AppCompatActivity implements MoviesView {
+public class MoviesActivity extends AppCompatActivity implements MoviesView, LoaderManager.LoaderCallbacks<MoviesResponse> {
 
     private static final String TAG = "MainActivity";
 
-    private static final String OUTSTATE_MOVIES = "nanodegree.state.MOVIES";
+    private static final int LOADER_MOVIES = 215;
 
     private Prefs prefs;
 
@@ -66,35 +65,33 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
         // Get preferences for sort order
         prefs = Prefs.with(this);
         // Load the movies
-        if (savedInstanceState == null || !savedInstanceState.containsKey(OUTSTATE_MOVIES)) {
-            loadMovies();
-        } else {
-            // No need to fetch movies again.
-            List<Movie> movies = savedInstanceState.getParcelableArrayList(OUTSTATE_MOVIES);
-            onFetchedMovies(movies);
-        }
+        LoaderManager loaderManager = getSupportLoaderManager();
+        loaderManager.initLoader(LOADER_MOVIES, null, this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         // Check the sort order preference
-        int sortOrderMenuId = Utils.getSortOrderMenuId(prefs.getMovieSortOrder());
+        int sortOrderMenuId = prefs.getMovieSortOrder().menuId;
         menu.findItem(sortOrderMenuId).setChecked(true);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        int id = item.getItemId();
+        switch (id) {
             case R.id.action_sort_now_playing:
             case R.id.action_sort_popular:
             case R.id.action_sort_top_rated:
             case R.id.action_sort_upcoming:
-                MovieSortOrder sortOrder = Utils.getMovieSortOrder(item.getItemId());
-                prefs.saveMovieSortOrder(sortOrder);
+            case R.id.action_sort_favorites:
+                MovieOrder movieOrder = MovieOrder.idOf(id);
+                prefs.saveMovieSortOrder(movieOrder);
                 item.setChecked(true);
-                loadMovies();
+                LoaderManager loaderManager = getSupportLoaderManager();
+                loaderManager.restartLoader(LOADER_MOVIES, null, this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -102,19 +99,7 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (recyclerView != null) {
-            if (recyclerView.getAdapter() instanceof MovieAdapter) {
-                MovieAdapter adapter = (MovieAdapter) recyclerView.getAdapter();
-                List<Movie> movies = adapter.getMovies();
-                outState.putParcelableArrayList(OUTSTATE_MOVIES, (ArrayList<Movie>) movies);
-            }
-        }
-    }
-
-    @Override
-    public void onFetchedMovies(@NonNull List<Movie> movies) {
+    public void showMovies(@NonNull List<Movie> movies) {
         errorLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
@@ -126,14 +111,14 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
     }
 
     @Override
-    public void onMovieClicked(@NonNull Movie movie) {
+    public void openMovieDetails(@NonNull Movie movie) {
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(DetailsActivity.EXTRA_MOVIE, movie);
         startActivity(intent);
     }
 
     @Override
-    public void onFailedToFetchMovies(@Nullable String reason) {
+    public void showErrorView(@Nullable String reason) {
         errorLayout.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
@@ -145,19 +130,28 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView {
         }
     }
 
-    public void onRefresh(View view) {
-        loadMovies();
+    @Override
+    public Loader<MoviesResponse> onCreateLoader(int id, Bundle args) {
+        return new MovieLoader(MoviesActivity.this, prefs.getMovieSortOrder());
     }
 
-    private void loadMovies() {
-        if (!Utils.isConnectedToInternet(this)) {
-            onFailedToFetchMovies(null);
-            return;
+    @Override
+    public void onLoadFinished(Loader<MoviesResponse> loader, MoviesResponse data) {
+        if (data == null) {
+            showErrorView(null);
+        } else {
+            showMovies(data.getResults());
         }
-        errorLayout.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        new FetchMoviesTask(this).execute(prefs.getMovieSortOrder());
+    }
+
+    @Override
+    public void onLoaderReset(Loader<MoviesResponse> loader) {
+
+    }
+
+    public void onRefresh(View view) {
+        LoaderManager loaderManager = getSupportLoaderManager();
+        loaderManager.restartLoader(LOADER_MOVIES, null, this);
     }
 
 }

@@ -19,13 +19,9 @@ package com.jaredrummler.android.nanodegree.movies.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
-
-import com.jaredrummler.android.nanodegree.movies.R;
-import com.jaredrummler.android.nanodegree.movies.tmdb.config.MovieSortOrder;
 
 /**
  * Helper methods for the app
@@ -58,48 +54,6 @@ public final class Utils {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
-
-    /**
-     * Get the sort order menu id
-     *
-     * @param sortOrder The sort order
-     * @return The resource id associated with the menu item
-     */
-    public static int getSortOrderMenuId(@NonNull MovieSortOrder sortOrder) {
-        switch (sortOrder) {
-            case POPULAR:
-                return R.id.action_sort_popular;
-            case TOP_RATED:
-                return R.id.action_sort_top_rated;
-            case UPCOMING:
-                return R.id.action_sort_upcoming;
-            case NOW_PLAYING:
-                return R.id.action_sort_now_playing;
-            default:
-                throw new IllegalArgumentException("Unknown sort order: " + sortOrder);
-        }
-    }
-
-    /**
-     * Get the movie sort order based on the menu id
-     *
-     * @param id The resource id
-     * @return The sort order
-     */
-    public static MovieSortOrder getMovieSortOrder(@IdRes int id) {
-        switch (id) {
-            case R.id.action_sort_now_playing:
-                return MovieSortOrder.NOW_PLAYING;
-            case R.id.action_sort_popular:
-                return MovieSortOrder.POPULAR;
-            case R.id.action_sort_top_rated:
-                return MovieSortOrder.TOP_RATED;
-            case R.id.action_sort_upcoming:
-                return MovieSortOrder.UPCOMING;
-            default:
-                throw new IllegalArgumentException("Resource id not associated with sort order");
-        }
     }
 
     private Utils() {

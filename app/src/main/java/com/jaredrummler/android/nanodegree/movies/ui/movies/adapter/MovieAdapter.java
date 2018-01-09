@@ -46,7 +46,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     private final OnItemClickListener listener = new OnItemClickListener() {
         @Override
         public void onItemClicked(int position) {
-            moviesView.onMovieClicked(movies.get(position));
+            moviesView.openMovieDetails(movies.get(position));
         }
     };
 
