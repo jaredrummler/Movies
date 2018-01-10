@@ -21,6 +21,11 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * A single movie review
+ * <p>
+ * https://developers.themoviedb.org/3/movies/get-movie-reviews
+ */
 public class Review implements Parcelable {
 
     @SerializedName("id")

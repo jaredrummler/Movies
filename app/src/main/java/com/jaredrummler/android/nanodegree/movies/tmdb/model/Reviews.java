@@ -23,6 +23,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * Movie reviews
+ * <p>
+ * https://developers.themoviedb.org/3/movies/get-movie-reviews
+ */
 public class Reviews implements Parcelable {
 
     @SerializedName("id")

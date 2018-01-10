@@ -23,6 +23,8 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Movie genre
+ * <p>
+ * https://developers.themoviedb.org/3/movies/get-movie-details
  */
 public class Genre implements Parcelable {
 

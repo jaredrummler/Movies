@@ -29,6 +29,9 @@ import java.util.Arrays;
 
 import static com.jaredrummler.android.nanodegree.movies.tmdb.db.MovieContract.MovieEntry.CONTENT_URI;
 
+/**
+ * Helper class to save or remove a movie from the movie database
+ */
 public class MovieFavorites {
 
     private final Context context;

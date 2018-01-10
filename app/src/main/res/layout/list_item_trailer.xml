@@ -14,6 +14,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:contentDescription="@string/desc_movie_trailer"
         android:foreground="?android:attr/selectableItemBackground"
         android:maxHeight="80dp"
         app:layout_constraintStart_toStartOf="parent"

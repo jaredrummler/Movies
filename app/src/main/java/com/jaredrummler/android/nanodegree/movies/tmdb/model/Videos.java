@@ -23,6 +23,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * Movie trailers
+ * <p>
+ * https://developers.themoviedb.org/3/movies/get-movie-videos
+ */
 public class Videos implements Parcelable {
 
     @SerializedName("id")

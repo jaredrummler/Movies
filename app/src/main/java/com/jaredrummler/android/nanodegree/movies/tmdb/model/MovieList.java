@@ -25,6 +25,8 @@ import java.util.List;
 
 /**
  * Contains movies from The Movie DB API.
+ * <p>
+ * https://developers.themoviedb.org/3/movies/get-popular-movies
  */
 public class MovieList implements Parcelable {
 

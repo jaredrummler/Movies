@@ -13,6 +13,7 @@
     <string name="sort_upcoming">Upcoming</string>
     <string name="sort_now_playing">Now playing</string>
     <string name="sort_order">Sort order</string>
+    <string name="sort_favorites">Favorites</string>
 
     <!-- Error message -->
     <eat-comment />
@@ -24,6 +25,10 @@
     <string name="videos">Trailers</string>
     <string name="reviews">Reviews</string>
 
+    <!-- Menu item titles -->
+    <eat-comment />
+    <string name="action_share">Share</string>
+
     <!-- Content description -->
     <eat-comment />
     <string name="desc_movie_backrop">Movie Backdrop</string>
@@ -31,7 +36,6 @@
     <string name="desc_attribution">Attribution</string>
     <string name="desc_logo">Logo</string>
     <string name="desc_movie_thumbnail">Movie thumbnail</string>
-    <string name="sort_favorites">Favorites</string>
-    <string name="action_share">Share</string>
+    <string name="desc_movie_trailer">Movie trailer</string>
 
 </resources>

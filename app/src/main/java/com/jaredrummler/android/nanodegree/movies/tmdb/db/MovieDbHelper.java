@@ -20,6 +20,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * The database to store favorite movies
+ */
 public class MovieDbHelper extends SQLiteOpenHelper implements MovieContract.MovieEntry {
 
     private static final String DATABASE_NAME = "movies.db";

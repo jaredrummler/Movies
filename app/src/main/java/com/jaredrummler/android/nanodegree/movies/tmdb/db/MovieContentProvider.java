@@ -30,6 +30,9 @@ import android.support.annotation.Nullable;
 import static android.provider.BaseColumns._ID;
 import static com.jaredrummler.android.nanodegree.movies.tmdb.db.MovieContract.MovieEntry.TABLE_NAME;
 
+/**
+ * A ContentProvider for favorite movies
+ */
 public class MovieContentProvider extends ContentProvider {
 
     private static final String TAG = "MovieContentProvider";

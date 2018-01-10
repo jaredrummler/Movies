@@ -22,6 +22,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * Movie details
+ * <p>
+ * https://developers.themoviedb.org/3/movies/get-movie-details
+ */
 public class MovieDetails extends Movie {
 
     @SerializedName("genres")

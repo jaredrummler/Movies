@@ -24,6 +24,11 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * A single movie trailer
+ * <p>
+ * https://developers.themoviedb.org/3/movies/get-movie-videos
+ */
 public class Trailer implements Parcelable {
 
     @SerializedName("id")

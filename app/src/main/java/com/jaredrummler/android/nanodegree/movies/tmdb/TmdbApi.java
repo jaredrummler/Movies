@@ -37,6 +37,13 @@ public interface TmdbApi {
 
     String TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
 
+    @GET("3/movie/{movie_id}")
+    Call<MovieDetails> fetchDetails(
+            @Path("movie_id") int id,
+            @Query("api_key") String apiKey,
+            @Query("append_to_response") String appendToResponse
+    );
+
     @GET("3/movie/{sort_by}")
     Call<MovieList> fetchMovies(
             @Path("sort_by") String sortBy,
@@ -67,13 +74,6 @@ public interface TmdbApi {
             @Path("movie_id") int id,
             @Query("api_key") String apiKey,
             @Query("page") int page
-    );
-
-    @GET("3/movie/{movie_id}")
-    Call<MovieDetails> fetchDetails(
-            @Path("movie_id") int id,
-            @Query("api_key") String apiKey,
-            @Query("append_to_response") String appendToResponse
     );
 
 }
