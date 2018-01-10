@@ -114,12 +114,11 @@
                 android:layout_marginTop="8dp"
                 android:isIndicator="true"
                 android:numStars="5"
-                app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
-                app:layout_constraintTop_toBottomOf="@+id/tv_release_date" />
-
+                app:layout_constraintTop_toBottomOf="@+id/tv_release_date"
+                app:layout_constraintWidth_default="wrap" />
 
             <TextView
                 android:id="@+id/tv_release_date"
@@ -129,10 +128,10 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:drawablePadding="4dp"
-                tools:drawableStart="@drawable/ic_date_range_black_16dp"
                 app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
                 app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
                 tools:drawableLeft="@drawable/ic_date_range_black_16dp"
+                tools:drawableStart="@drawable/ic_date_range_black_16dp"
                 tools:text="2017-12-31" />
 
             <ImageView
