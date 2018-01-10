@@ -17,7 +17,10 @@
 package com.jaredrummler.android.nanodegree.movies.ui.movies;
 
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -34,6 +37,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jaredrummler.android.nanodegree.movies.R;
+import com.jaredrummler.android.nanodegree.movies.tmdb.db.MovieContract;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.MovieList;
 import com.jaredrummler.android.nanodegree.movies.ui.details.DetailsActivity;
@@ -67,6 +71,14 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView, Loa
         // Load the movies
         LoaderManager loaderManager = getSupportLoaderManager();
         loaderManager.initLoader(LOADER_MOVIES, null, this);
+        // Listen for changes to the favorites
+        getContentResolver().registerContentObserver(MovieContract.MovieEntry.CONTENT_URI, true, contentObserver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getContentResolver().unregisterContentObserver(contentObserver);
     }
 
     @Override
@@ -153,5 +165,21 @@ public class MoviesActivity extends AppCompatActivity implements MoviesView, Loa
         LoaderManager loaderManager = getSupportLoaderManager();
         loaderManager.restartLoader(LOADER_MOVIES, null, this);
     }
+
+    private final ContentObserver contentObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            this.onChange(selfChange, null);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            if (prefs.getMovieSortOrder() == MovieOrder.FAVORITES) {
+                // update the favorites list
+                LoaderManager loaderManager = getSupportLoaderManager();
+                loaderManager.restartLoader(LOADER_MOVIES, null, MoviesActivity.this);
+            }
+        }
+    };
 
 }
