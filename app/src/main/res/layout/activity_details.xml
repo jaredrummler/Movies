@@ -128,11 +128,11 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:drawableLeft="@drawable/ic_date_range_black_16dp"
                 android:drawablePadding="4dp"
-                android:drawableStart="@drawable/ic_date_range_black_16dp"
+                tools:drawableStart="@drawable/ic_date_range_black_16dp"
                 app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
                 app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
+                tools:drawableLeft="@drawable/ic_date_range_black_16dp"
                 tools:text="2017-12-31" />
 
             <ImageView

@@ -17,16 +17,20 @@
 package com.jaredrummler.android.nanodegree.movies.ui.details;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -142,6 +146,14 @@ public class DetailsActivity extends AppCompatActivity
         // Set the release date
         TextView tvReleaseDate = (TextView) findViewById(R.id.tv_release_date);
         tvReleaseDate.setText(movie.getReleaseDate());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Drawable leftDrawable = AppCompatResources.getDrawable(this, R.drawable.ic_date_range_black_16dp);
+            tvReleaseDate.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, null, null, null);
+        } else {
+            Drawable leftDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_date_range_black_16dp, null);
+            tvReleaseDate.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, null, null, null);
+        }
+
         // Set the rating
         RatingBar ratingBar = (RatingBar) findViewById(R.id.movie_rating);
         ratingBar.setRating((movie.getVoteAverage().floatValue() / 10) * 5);
