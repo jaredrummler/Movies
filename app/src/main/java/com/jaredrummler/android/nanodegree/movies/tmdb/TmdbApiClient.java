@@ -16,6 +16,8 @@
 
 package com.jaredrummler.android.nanodegree.movies.tmdb;
 
+import com.jaredrummler.android.nanodegree.movies.App;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -29,6 +31,7 @@ public final class TmdbApiClient {
     static {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(TmdbApi.TMDB_BASE_URL)
+                .client(App.getOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         INSTANCE = retrofit.create(TmdbApi.class);

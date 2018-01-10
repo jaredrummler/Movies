@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -32,6 +33,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.movies.MoviesActivity" />
         </activity>
+
+        <provider
+            android:name=".tmdb.db.MovieContentProvider"
+            android:authorities="com.jaredrummler.android.nanodegree.movies"
+            android:exported="false" />
     </application>
 
 </manifest>

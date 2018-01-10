@@ -16,7 +16,10 @@
 
 package com.jaredrummler.android.nanodegree.movies.tmdb;
 
-import com.jaredrummler.android.nanodegree.movies.tmdb.model.MoviesResponse;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.MovieDetails;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.MovieList;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.Reviews;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.Videos;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -25,7 +28,7 @@ import retrofit2.http.Query;
 
 /**
  * The Movie DB API
- *
+ * <p>
  * See: https://developers.themoviedb.org
  */
 public interface TmdbApi {
@@ -34,15 +37,41 @@ public interface TmdbApi {
 
     String TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
 
+    @GET("3/movie/{movie_id}")
+    Call<MovieDetails> fetchDetails(
+            @Path("movie_id") int id,
+            @Query("api_key") String apiKey,
+            @Query("append_to_response") String appendToResponse
+    );
+
     @GET("3/movie/{sort_by}")
-    Call<MoviesResponse> fetchMovies(
+    Call<MovieList> fetchMovies(
             @Path("sort_by") String sortBy,
             @Query("api_key") String apiKey
     );
 
     @GET("3/movie/{sort_by}")
-    Call<MoviesResponse> fetchMovies(
+    Call<MovieList> fetchMovies(
             @Path("sort_by") String sortBy,
+            @Query("api_key") String apiKey,
+            @Query("page") int page
+    );
+
+    @GET("3/movie/{movie_id}/videos")
+    Call<Videos> fetchTrailers(
+            @Path("movie_id") int id,
+            @Query("api_key") String apiKey
+    );
+
+    @GET("3/movie/{movie_id}/reviews")
+    Call<Reviews> fetchReviews(
+            @Path("movie_id") int id,
+            @Query("api_key") String apiKey
+    );
+
+    @GET("3/movie/{movie_id}/reviews")
+    Call<Reviews> fetchReviews(
+            @Path("movie_id") int id,
             @Query("api_key") String apiKey,
             @Query("page") int page
     );

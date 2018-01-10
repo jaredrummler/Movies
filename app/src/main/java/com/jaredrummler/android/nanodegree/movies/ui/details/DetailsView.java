@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Jared Rummler
+ * Copyright (C) 2018 Jared Rummler
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,33 @@
  * limitations under the License.
  */
 
-package com.jaredrummler.android.nanodegree.movies.ui.movies;
+package com.jaredrummler.android.nanodegree.movies.ui.details;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.jaredrummler.android.nanodegree.movies.tmdb.model.Movie;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.Review;
+import com.jaredrummler.android.nanodegree.movies.tmdb.model.Trailer;
 
 import java.util.List;
 
-public interface MoviesView {
+public interface DetailsView {
 
-    /**
-     * Called when a movie was clicked from the RecyclerView
-     *
-     * @param movie The movie that was clicked
-     */
-    void openMovieDetails(@NonNull Movie movie);
+    void showMovieDetails(@NonNull Movie movie);
 
-    /**
-     * Called when movies were loaded from The Movie DB API.
-     *
-     * @param movies The list of movies
-     */
-    void showMovies(@NonNull List<Movie> movies);
+    void showBackdrop(@NonNull Movie movie);
 
-    /**
-     * Called when an error occurred while fetching the movies.
-     *
-     * @param reason Optional reason for failure
-     */
-    void showErrorView(@Nullable String reason);
+    void showPoster(@NonNull Movie movie);
+
+    void showTrailers(@Nullable List<Trailer> trailers);
+
+    void openTrailer(@NonNull Trailer trailer);
+
+    void showReviews(@Nullable List<Review> reviews);
+
+    void openReview(@NonNull Review review);
+
+    void updateFavoritesView();
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Jared Rummler
+ * Copyright (C) 2018 Jared Rummler
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package com.jaredrummler.android.nanodegree.movies.ui.movies.adapter;
+package com.jaredrummler.android.nanodegree.movies.ui.details.reviews;
 
 import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.jaredrummler.android.nanodegree.movies.utils.BaseViewHolder;
 
-/**
- * The ViewHolder for the {@link MovieAdapter}.
- */
-final class MovieViewHolder extends BaseViewHolder {
+final class ReviewsViewHolder extends BaseViewHolder {
 
-    MovieViewHolder(View itemView, @NonNull final OnItemClickListener listener) {
+    ReviewsViewHolder(View itemView, @NonNull final OnItemClickListener listener) {
         super(itemView);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

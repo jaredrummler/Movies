@@ -13,12 +13,21 @@
     <string name="sort_upcoming">Upcoming</string>
     <string name="sort_now_playing">Now playing</string>
     <string name="sort_order">Sort order</string>
+    <string name="sort_favorites">Favorites</string>
 
     <!-- Error message -->
     <eat-comment />
     <string name="btn_try_again">Try again</string>
     <string name="no_connection_message">No internet connection found.\nPlease check your connection or try again.</string>
     <string name="no_connection">No connection</string>
+
+    <!-- Movie Detail Titles -->
+    <string name="videos">Trailers</string>
+    <string name="reviews">Reviews</string>
+
+    <!-- Menu item titles -->
+    <eat-comment />
+    <string name="action_share">Share</string>
 
     <!-- Content description -->
     <eat-comment />
@@ -27,5 +36,6 @@
     <string name="desc_attribution">Attribution</string>
     <string name="desc_logo">Logo</string>
     <string name="desc_movie_thumbnail">Movie thumbnail</string>
+    <string name="desc_movie_trailer">Movie trailer</string>
 
 </resources>

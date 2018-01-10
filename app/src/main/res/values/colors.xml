@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF7043</color>
 
     <color name="ic_launcher_background">@color/colorPrimary</color>
+    <color name="dividerColor">#1D1D1D</color>
 </resources>

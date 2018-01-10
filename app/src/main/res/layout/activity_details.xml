@@ -64,7 +64,6 @@
             android:visibility="invisible"
             tools:visibility="visible">
 
-
             <android.support.constraint.Guideline
                 android:id="@+id/guidelineStart"
                 android:layout_width="wrap_content"
@@ -81,8 +80,8 @@
 
             <ImageView
                 android:id="@+id/iv_movie_poster"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/poster_width_small"
+                android:layout_height="@dimen/poster_height_small"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/desc_movie_poster"
                 app:layout_constraintStart_toStartOf="@+id/guidelineStart"
@@ -94,7 +93,9 @@
                 android:id="@+id/tv_movie_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginRight="32dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
@@ -119,16 +120,6 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
                 app:layout_constraintTop_toBottomOf="@+id/tv_release_date" />
 
-            <TextView
-                android:id="@+id/tv_overview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
-                app:layout_constraintStart_toStartOf="@+id/guidelineStart"
-                app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster"
-                tools:text="The movie overview" />
 
             <TextView
                 android:id="@+id/tv_release_date"
@@ -137,30 +128,48 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:drawableLeft="@drawable/ic_date_range_black_16dp"
                 android:drawablePadding="4dp"
-                android:drawableStart="@drawable/ic_date_range_black_16dp"
+                tools:drawableStart="@drawable/ic_date_range_black_16dp"
                 app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
                 app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
+                tools:drawableLeft="@drawable/ic_date_range_black_16dp"
                 tools:text="2017-12-31" />
 
             <ImageView
                 android:id="@+id/iv_tmdb_attribution"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:contentDescription="@string/desc_attribution"
                 android:onClick="onOpenTmdb"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_overview"
+                app:layout_constraintTop_toBottomOf="@+id/cv_reviews"
                 app:srcCompat="@drawable/vd_powered_by_tmdb" />
+
+            <include layout="@layout/include_overview" />
+
+            <include layout="@layout/include_trailers" />
+
+            <include layout="@layout/include_reviews" />
 
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom|right|end"
+        tools:src="@drawable/ic_favorite_border_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

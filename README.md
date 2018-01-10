@@ -4,7 +4,7 @@
 
 This project was developed for the Android Nanodegree at Udacity in accordance with the [implementation guide](https://docs.google.com/document/d/1ZlN1fUsCSKuInLECcJkslIqvpKlP7jWL2TP9m6UiA6I/pub?embedded=true)
 
-### TBDB API Key
+### The Movie Database API Key
 
 Steps to get an API key:
 
