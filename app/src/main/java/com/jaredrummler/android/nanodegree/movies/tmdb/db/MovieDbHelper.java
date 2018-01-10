@@ -38,7 +38,7 @@ public class MovieDbHelper extends SQLiteOpenHelper implements MovieContract.Mov
                 COLUMN_OVERVIEW + " TEXT, " +
                 COLUMN_RELEASE_DATE + " TEXT, " +
                 COLUMN_GENRE_IDS + " TEXT, " +
-                COLUMN_ID + " INTEGER NOT NULL, " +
+                COLUMN_MID + " INTEGER NOT NULL, " +
                 COLUMN_ORIGINAL_TITLE + " TEXT, " +
                 COLUMN_ORIGINAL_LANGUAGE + " TEXT, " +
                 COLUMN_TITLE + " TEXT, " +

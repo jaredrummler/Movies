@@ -131,7 +131,7 @@ public class MovieLoader extends AsyncTaskLoader<MovieList> {
             ids.add(Integer.parseInt(matcher.group(0)));
         }
         movie.setGenreIds(ids);
-        movie.setId(cursor.getInt(cursor.getColumnIndex(MovieEntry.COLUMN_ID)));
+        movie.setId(cursor.getInt(cursor.getColumnIndex(MovieEntry.COLUMN_MID)));
         movie.setOriginalTitle(cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_ORIGINAL_TITLE)));
         movie.setOriginalLanguage(cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_ORIGINAL_LANGUAGE)));
         movie.setTitle(cursor.getString(cursor.getColumnIndex(MovieEntry.COLUMN_TITLE)));

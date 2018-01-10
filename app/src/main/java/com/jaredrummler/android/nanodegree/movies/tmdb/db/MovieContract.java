@@ -36,20 +36,20 @@ public interface MovieContract {
 
         String TABLE_NAME = "movies";
 
-        String COLUMN_POSTER_PATH = "poster_path";
-        String COLUMN_ADULT = "adult";
-        String COLUMN_OVERVIEW = "overview";
-        String COLUMN_RELEASE_DATE = "release_date";
-        String COLUMN_GENRE_IDS = "genre_ids";
-        String COLUMN_ID = "id";
-        String COLUMN_ORIGINAL_TITLE = "original_title";
-        String COLUMN_ORIGINAL_LANGUAGE = "original_language";
+        String COLUMN_MID = "id";
         String COLUMN_TITLE = "title";
+        String COLUMN_OVERVIEW = "overview";
+        String COLUMN_GENRE_IDS = "genre_ids";
+        String COLUMN_RELEASE_DATE = "release_date";
         String COLUMN_BACKDROP_PATH = "backdrop_path";
-        String COLUMN_POPULARITY = "popularity";
-        String COLUMN_VOTE_COUNT = "vote_count";
-        String COLUMN_VIDEO = "video";
+        String COLUMN_POSTER_PATH = "poster_path";
+        String COLUMN_ORIGINAL_LANGUAGE = "original_language";
+        String COLUMN_ORIGINAL_TITLE = "original_title";
         String COLUMN_VOTE_AVERAGE = "vote_average";
+        String COLUMN_VOTE_COUNT = "vote_count";
+        String COLUMN_POPULARITY = "popularity";
+        String COLUMN_VIDEO = "video";
+        String COLUMN_ADULT = "adult";
 
         String CONTENT_TYPE = CURSOR_DIR_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;
         String CONTENT_ITEM_TYPE = CURSOR_ITEM_BASE_TYPE + "/" + AUTHORITY + "/" + PATH_MOVIES;

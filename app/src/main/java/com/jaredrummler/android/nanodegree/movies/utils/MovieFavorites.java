@@ -46,8 +46,8 @@ public class MovieFavorites {
     public boolean isFavorite(Movie movie) {
         try {
             ContentResolver resolver = context.getContentResolver();
-            String[] projection = {MovieEntry.COLUMN_ID};
-            String selection = MovieEntry.COLUMN_ID + "=?";
+            String[] projection = {MovieEntry.COLUMN_MID};
+            String selection = MovieEntry.COLUMN_MID + "=?";
             String[] selectionArgs = {Integer.toString(movie.getId())};
             Cursor query = resolver.query(CONTENT_URI,
                     projection, selection, selectionArgs, null);
@@ -77,7 +77,7 @@ public class MovieFavorites {
             values.put(MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
             values.put(MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
             values.put(MovieEntry.COLUMN_GENRE_IDS, Arrays.toString(movie.getGenreIds().toArray()));
-            values.put(MovieEntry.COLUMN_ID, movie.getId());
+            values.put(MovieEntry.COLUMN_MID, movie.getId());
             values.put(MovieEntry.COLUMN_ORIGINAL_TITLE, movie.getOriginalTitle());
             values.put(MovieEntry.COLUMN_ORIGINAL_LANGUAGE, movie.getOriginalLanguage());
             values.put(MovieEntry.COLUMN_TITLE, movie.getTitle());
@@ -100,7 +100,7 @@ public class MovieFavorites {
      */
     public boolean remove(Movie movie) {
         ContentResolver resolver = context.getContentResolver();
-        String where = MovieEntry.COLUMN_ID + "=?";
+        String where = MovieEntry.COLUMN_MID + "=?";
         String[] whereClause = {Integer.toString(movie.getId())};
         int delete = resolver.delete(CONTENT_URI, where, whereClause);
         return delete > 0;
